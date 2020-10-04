@@ -25,17 +25,18 @@ using std::endl;
 bool SKIP_USER_INPUT = false;
 
 //Debug String
-string DEBUG_STRING = "All poets, all writers are political. They either maintain the status quo, or they say, ’Something’s wrong, let’s change it for the better.";
-
+string DEBUG_STRING = "The fitness gram pacer test, is a multi stage test, that...";
+//string DEBUG_STRING = "ABCD";
 
 //Debug mode
 bool DEBUG_MODE = true;
+bool DEBUG_ENCRYPT = true;
 
 bool validateUserKeyInput(string);
 string grabUserInputKey();
 string generateRandomKey();
 string toUpperCase(string);
-string monoSubEncrypt(string message, string key);
+string monoSubEncrypt(string& message, string key);
 
 
 int main()
@@ -68,11 +69,15 @@ int main()
 	cout << "Key input successful" << endl;
 	cout << "Key: " << userInputKey << "\n" << endl;
 
-
+	if (DEBUG_ENCRYPT) {
+		cout << "Message: " << DEBUG_STRING << endl;
+		cout << "Encrypted Message: " << monoSubEncrypt(DEBUG_STRING, userInputKey);
+	}
 }
 
 string toUpperCase(string inputString) {
 	for (char& c : inputString) c = toupper(c);
+	return inputString;
 }
 
 //generates an uppercase MASC key by shuffling the English alphabet
@@ -108,6 +113,33 @@ bool validateUserKeyInput(string key)
 }
 
 
-string monoSubEncrypt(string message, string key) {
-	return "wip";
+string monoSubEncrypt(string& message, string key) {
+
+	int index = 0;
+	char c;
+	string encryptedMessage = "";
+
+	for (unsigned index{ 0 }; index < message.length(); index++) {
+		//Checks if character is valid and uppercase/lowercase, otherwise skip encryption
+		c = message.at(index);
+		if (c > 96 && c < 123) {
+			c -= 97;
+		}
+		else if (c > 64 && c < 91) {
+			c -= 65;
+		}
+		else { 
+			message[index] = c;
+			continue; 
+		}
+
+		if (DEBUG_MODE) {
+			cout << "c: "<< message.at(index) << " = "<< static_cast<int>(c) << endl;
+		}
+
+		message[index] = key.at(static_cast<int>(c));
+
+	}
+
+	return message;
 }
