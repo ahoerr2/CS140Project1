@@ -6,7 +6,7 @@
 		Check if input is valid(Make uppercase) *
 		Store the substitution key *
 		Accept a plaintext message from user
-		Encrypt the message
+		Encrypt the message $
 		Display message to user
 
 */
