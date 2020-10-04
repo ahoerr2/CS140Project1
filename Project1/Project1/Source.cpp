@@ -11,7 +11,6 @@
 
 */
 
-
 #include <iostream>
 #include <string>
 #include <random>
@@ -30,7 +29,7 @@ bool DEBUG_MODE = true;
 
 bool validateUserKeyInput(string);
 string grabUserInputKey();
-
+string generateRandomKey();
 
 int main()
 {
@@ -40,7 +39,7 @@ int main()
 	string userInputKey = grabUserInputKey();
 	for (char& c : userInputKey) c = toupper(c);
 
-	if (userInputKey.length() == 0)
+	if (userInputKey.length() == 0) userInputKey = generateRandomKey();
 
 		if (DEBUG_MODE)
 		{
@@ -58,15 +57,16 @@ int main()
 	}
 	cout << "Key input successful" << endl;
 	cout << "Key: " << userInputKey << "\n" << endl;
-
-
-
 }
 
 //generates an uppercase MASC key by shuffling the English alphabet
 std::string generateRandomKey() {
 	std::string randomKey{ "ABCDEFGHIJKLMNOPQRSTUVWXYZ" };
-	std::random_device rnd; const auto seed = rnd.entropy() ? rnd() : time(nullptr); std::mt19937_64 eng(static_cast<std::mt19937_64::result_type>(seed)); std::cout << "\nGenerating random key..." << std::endl; shuffle(randomKey.begin(), randomKey.end(), eng); return randomKey;
+	std::random_device rnd; const auto seed = rnd.entropy() ? rnd() : time(nullptr);
+	std::mt19937_64 eng(static_cast<std::mt19937_64::result_type>(seed));
+	std::cout << "\nGenerating random key..." << std::endl;
+	shuffle(randomKey.begin(), randomKey.end(), eng);
+	return randomKey;
 }
 string grabUserInputKey()
 {
