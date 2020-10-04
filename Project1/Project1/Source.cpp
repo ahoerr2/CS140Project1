@@ -37,6 +37,7 @@ string grabUserInputKey();
 string generateRandomKey();
 string toUpperCase(string);
 string monoSubEncrypt(string& message, string key);
+int grabUserSpacing();
 
 
 int main()
@@ -69,6 +70,24 @@ int main()
 	cout << "Key input successful" << endl;
 	cout << "Key: " << userInputKey << "\n" << endl;
 
+	//Prompts user to enter plaintext for translation
+    	cout << "Enter the plaintext: " << endl;
+   	 string plaintext = " ";
+   	 std::getline(cin , plaintext);
+    
+  	  if(DEBUG_MODE)
+   	 {
+   	     cout << "Plaintext: " << plaintext << endl;
+   	 }
+    
+   	 //prompts user for spacing parameter
+   	 cout << "How many letters should appear in each grouping? " << endl << "(Press enter for a default spacing of 5, negative entry provides original spacing.)" << endl;
+    
+   	 int userSpacing = grabUserSpacing();
+    
+   	 if(DEBUG_MODE)
+     	   cout << "Spacing input: " << userSpacing << endl;
+	
 	if (DEBUG_ENCRYPT) {
 		cout << "Message: " << DEBUG_STRING << endl;
 		cout << "Encrypted Message: " << monoSubEncrypt(DEBUG_STRING, userInputKey);
@@ -112,6 +131,21 @@ bool validateUserKeyInput(string key)
 	return true;
 }
 
+int grabUserSpacing()
+{
+    int spacing = 5;
+    int inputSpace;
+    
+    cout << "Spacing: ";
+    cin >> inputSpace;
+    
+    if(inputSpace >= 1)
+    {
+        spacing = inputSpace;
+    }
+    
+    return spacing;
+}
 
 string monoSubEncrypt(string& message, string key) {
 
