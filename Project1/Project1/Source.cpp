@@ -109,5 +109,5 @@ bool validateUserKeyInput(string key)
 
 
 string monoSubEncrypt(string message, string key) {
-
+	return "wip";
 }
