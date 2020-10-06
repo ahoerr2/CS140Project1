@@ -28,7 +28,7 @@ string DEBUG_STRING = "The fitness gram pacer test, is a multi stage test, that.
 //string DEBUG_STRING = "ABCD";
 
 //Debug mode
-bool DEBUG_MODE = false;
+bool DEBUG_MODE = true;
 bool DEBUG_ENCRYPT = false;
 
 bool validateUserKeyInput(string);
@@ -45,12 +45,14 @@ int main()
 {
     //Asks the user for the key and stores the key in an uppercase string
     cout << "Testing Monoalphabetic Substitution Cipher (MASC) program: " << endl << endl;
-    cout << "Please make a selection: " << endl << "(1)Type in a key" << endl << "(2)Have a key generated for you" << endl << endl << "Choice: ";
     int userOption = 0;
     string userInputKey;
-    std::cin >> userOption;
-    std::cin.ignore();
-
+    do {
+    cout << "Please make a selection: " << endl << "(1)Type in a key" << endl << "(2)Have a key generated for you" << endl << endl << "Choice: ";
+        
+        std::cin >> userOption;
+        std::cin.ignore();
+    } while (userOption != 1 && userOption != 2);
 
     if(userOption == 1)
     {
@@ -60,6 +62,7 @@ int main()
     {
         userInputKey = generateRandomKey();
     }
+
 
     userInputKey = toUpperCase(userInputKey);
     
@@ -75,6 +78,7 @@ int main()
     while (keyInputSuccessful != true)
     {
         userInputKey = grabUserInputKey();
+        userInputKey = toUpperCase(userInputKey);
         keyInputSuccessful = validateUserKeyInput(userInputKey);
     }
 
@@ -117,6 +121,9 @@ string toUpperCase(string inputString) {
     return inputString;
 }
 
+
+
+
 //generates an uppercase MASC key by shuffling the English alphabet
 std::string generateRandomKey() {
     std::string randomKey{ "ABCDEFGHIJKLMNOPQRSTUVWXYZ" };
@@ -141,6 +148,7 @@ bool validateUserKeyInput(string key)
         cout << "Incorrect key length. Must be 26 characters." << endl;
         return false;
     }
+    
 
     //Checks if each character is within an ENGLISH ASCII uppercase character
     for (char c : key)
@@ -151,6 +159,18 @@ bool validateUserKeyInput(string key)
         {
             cout << "Error: invalid character in key." << endl;
             return false;
+        }
+    }
+
+    //Does an iterative search to check that all characters are unique
+    char character;
+    for (unsigned index{ 0 }; index < key.length() - 1; index++) {
+        character = key.at(index);
+        for (unsigned searchIndex{ index + 1 }; searchIndex < key.length(); searchIndex++) {
+            if (character == key.at(searchIndex)) {
+                cout << "Error: Duplicate characters found" << endl;
+                return false;
+            }
         }
     }
 
@@ -179,7 +199,7 @@ bool isValidChar(char c) {
 }
 
 void validatePlaintext(string& plaintext, int spacing) {
-    for (int index = 0; index < plaintext.length(); index++) {
+    for (unsigned index = 0; index < plaintext.length(); index++) {
         if (isValidChar(plaintext.at(index))) continue;
         else if (plaintext.at(index) == ' ' && spacing <= -1) continue;
         else {
