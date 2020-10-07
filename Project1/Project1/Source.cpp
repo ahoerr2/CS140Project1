@@ -1,15 +1,5 @@
 //Monoalphabetic substitution cipher by Alex Hoerr and Emily Baker
 
-/*TODO: (* finished) ($ finished needs review) (- work in progress)
-*
-        Accept Input(Key) from user *
-        Check if input is valid(Make uppercase) *
-        Store the substitution key *
-        Accept a plaintext message from user
-        Encrypt the message $
-        Display message to user
-*/
-
 #include <iostream>
 #include <string>
 #include <random>
@@ -43,17 +33,21 @@ void validatePlaintext(string&, int spacing);
 
 int main()
 {
-    //Asks the user for the key and stores the key in an uppercase string
     cout << "Testing Monoalphabetic Substitution Cipher (MASC) program: " << endl << endl;
-    int userOption = 0;
-    string userInputKey;
-    do {
-    cout << "Please make a selection: " << endl << "(1)Type in a key" << endl << "(2)Have a key generated for you" << endl << endl << "Choice: ";
         
+    int userOption = 0
+    string userInputKey;
+        
+    //Asks the user to make a selection
+    do 
+    {
+        cout << "Please make a selection: " << endl << "(1)Type in a key" << endl << "(2)Have a key generated for you" << endl << endl << "Choice: ";
         std::cin >> userOption;
         std::cin.ignore();
-    } while (userOption != 1 && userOption != 2);
+    } 
+    while (userOption != 1 && userOption != 2);
 
+    //Generates randomkey or asks for key input based on response
     if(userOption == 1)
     {
         userInputKey = grabUserInputKey();
@@ -63,9 +57,10 @@ int main()
         userInputKey = generateRandomKey();
     }
 
-
+    //uppercases input
     userInputKey = toUpperCase(userInputKey);
     
+    //debug information
     if (DEBUG_MODE)
     {
         cout << userInputKey << endl;
@@ -84,12 +79,12 @@ int main()
 
     cout << "Key is now: " << userInputKey << endl << endl;
 
-    //Prompts user to enter plaintext for translation
+    //Prompts user to enter plaintext for encryption
     cout << "Enter the plaintext: " << endl;
     string plaintext = "";
     std::getline(cin , plaintext);
      
-    
+    //debug information
     if(DEBUG_MODE)
     {
         cout << "Plaintext: " << plaintext << endl;
@@ -102,6 +97,7 @@ int main()
     
     validatePlaintext(plaintext,userSpacing);
     
+        //debug information
     if(DEBUG_MODE)
     {
         cout << "User Spacing: " << userSpacing << endl;
@@ -112,20 +108,25 @@ int main()
          cout << "Message: " << plaintext << endl;
      }
        
+    //outputs encrypted plaintext
     cout << endl << endl << "Ciphertext is: " << monoSubEncrypt(plaintext, userInputKey, userSpacing)<<endl;
     
 }
 
-string toUpperCase(string inputString) {
-    for (char& c : inputString) c = toupper(c);
+//Puts string in all uppercase
+string toUpperCase(string inputString)
+{
+    for (char& c : inputString)
+    {
+        c = toupper(c);
+    }
+        
     return inputString;
 }
 
-
-
-
 //generates an uppercase MASC key by shuffling the English alphabet
-std::string generateRandomKey() {
+std::string generateRandomKey() 
+{
     std::string randomKey{ "ABCDEFGHIJKLMNOPQRSTUVWXYZ" };
     std::random_device rnd; const auto seed = rnd.entropy() ? rnd() : time(nullptr);
     std::mt19937_64 eng(static_cast<std::mt19937_64::result_type>(seed));
@@ -133,6 +134,8 @@ std::string generateRandomKey() {
     shuffle(randomKey.begin(), randomKey.end(), eng);
     return randomKey;
 }
+
+//asks for a key from the user
 string grabUserInputKey()
 {
     cout << endl << endl << "Enter a key to be used for ecryption. Include each letter of the alphabet, none repeated: " << endl;
@@ -141,8 +144,10 @@ string grabUserInputKey()
     return inputKey;
 }
 
+//Determines if the user input key is valid, meaning all 26 letters, none repeating, only letters
 bool validateUserKeyInput(string key)
 {
+    //checks key length for 26
     if (key.length() != 26)
     {
         cout << "Incorrect key length. Must be 26 characters." << endl;
@@ -153,8 +158,16 @@ bool validateUserKeyInput(string key)
     //Checks if each character is within an ENGLISH ASCII uppercase character
     for (char c : key)
     {
-        if (DEBUG_MODE) cout << "Character: " << c << endl;
-        if (c > 64 && c < 91) continue;
+        //debug information
+        if (DEBUG_MODE) 
+        {
+            cout << "Character: " << c << endl;
+        }
+            
+        if (c > 64 && c < 91) 
+        {
+            continue;
+        }
         else
         {
             cout << "Error: invalid character in key." << endl;
@@ -164,10 +177,13 @@ bool validateUserKeyInput(string key)
 
     //Does an iterative search to check that all characters are unique
     char character;
-    for (unsigned index{ 0 }; index < key.length() - 1; index++) {
+    for (unsigned index{ 0 }; index < key.length() - 1; index++) 
+    {
         character = key.at(index);
-        for (unsigned searchIndex{ index + 1 }; searchIndex < key.length(); searchIndex++) {
-            if (character == key.at(searchIndex)) {
+        for (unsigned searchIndex{ index + 1 }; searchIndex < key.length(); searchIndex++) 
+        {
+            if (character == key.at(searchIndex)) 
+            {
                 cout << "Error: Duplicate characters found" << endl;
                 return false;
             }
@@ -177,41 +193,65 @@ bool validateUserKeyInput(string key)
     return true;
 }
 
+//prompts the user for amount of letters before a space is added in the encryption
 int grabUserSpacing()
 {
     int spacing = 5;
     int inputSpace;
     
     cout << "Spacing: ";
-    if (cin.peek() == '\n') return spacing;
+    if (cin.peek() == '\n') 
+    {
+         return spacing;
+    }
+        
     cin >> inputSpace;
 
-    if (inputSpace == 0) return spacing;
+    if (inputSpace == 0) 
+    {
+        return spacing;
+    }
         spacing = inputSpace;
 
     
     return spacing;
 }
 
-bool isValidChar(char c) {
-    if ((c > 96 && c < 123) || (c > 64 && c < 91)) return true;
+//determines if a character is plaintext
+bool isValidChar(char c) 
+{
+    if ((c > 96 && c < 123) || (c > 64 && c < 91)) 
+    {
+         return true;
+    }
+        
     return false;
 }
 
-void validatePlaintext(string& plaintext, int spacing) {
-    for (unsigned index = 0; index < plaintext.length(); index++) {
-        if (isValidChar(plaintext.at(index))) continue;
-        else if (plaintext.at(index) == ' ' && spacing <= -1) continue;
-        else {
+//determines if a string is valid plaintext using isValidChar
+void validatePlaintext(string& plaintext, int spacing) 
+{
+    for (unsigned index = 0; index < plaintext.length(); index++) 
+    {
+        if (isValidChar(plaintext.at(index))) 
+        {
+               continue;
+        }
+        else if (plaintext.at(index) == ' ' && spacing <= -1) 
+        {
+                continue;
+        }
+        else 
+        {
             plaintext.erase(plaintext.begin() + index);
             index--;
-        
         }
     }
 }
 
-
-string monoSubEncrypt(string message, string key, int spacing) {
+//encrypts the valid plaintext using spacing and key
+string monoSubEncrypt(string message, string key, int spacing) 
+{
 
     int index = 0;
     char c;
@@ -219,27 +259,33 @@ string monoSubEncrypt(string message, string key, int spacing) {
     int spacingIndex = 0;
     int encryptedLength = message.length() + (message.length() / spacing);
 
-    for (unsigned index{ 0 }; index < message.length(); index++) {
+    for (unsigned index{ 0 }; index < message.length(); index++) 
+    {
         //Checks if character is valid and uppercase/lowercase, otherwise skip encryption
         c = message.at(index);
 
-        if (spacing <= -1 && c == ' ') {
+        if (spacing <= -1 && c == ' ') 
+        {
             encryptedMessage += ' ';
             continue;
         }
 
-        if (c > 96 && c < 123) {
+        if (c > 96 && c < 123)
+        {
             c -= 97;
         }
-        else if (c > 64 && c < 91) {
+        else if (c > 64 && c < 91)
+        {
             c -= 65;
         }
 
-        if (DEBUG_MODE) {
+        if (DEBUG_MODE) 
+        {
             cout << "c: "<< message.at(index) << " = "<< static_cast<int>(c) << endl;
         }
 
-        if ((spacingIndex % spacing == 0 && index != 0) && spacing >= 1) {
+        if ((spacingIndex % spacing == 0 && index != 0) && spacing >= 1) 
+        {
             encryptedMessage += ' ';
             spacingIndex = 0;
         }
