@@ -18,7 +18,7 @@ string DEBUG_STRING = "The fitness gram pacer test, is a multi stage test, that.
 //string DEBUG_STRING = "ABCD";
 
 //Debug mode
-bool DEBUG_MODE = true;
+bool DEBUG_MODE = false;
 bool DEBUG_ENCRYPT = false;
 
 bool validateUserKeyInput(string);
@@ -35,7 +35,7 @@ int main()
 {
     cout << "Testing Monoalphabetic Substitution Cipher (MASC) program: " << endl << endl;
         
-    int userOption = 0
+    int userOption = 0;
     string userInputKey;
         
     //Asks the user to make a selection
@@ -57,7 +57,7 @@ int main()
         userInputKey = generateRandomKey();
     }
 
-    //uppercases input
+    //Changes input to uppercase
     userInputKey = toUpperCase(userInputKey);
     
     //debug information
@@ -69,7 +69,6 @@ int main()
 
     //Promts user to enter a new key is the key was invalid
     bool keyInputSuccessful = validateUserKeyInput(userInputKey);
-
     while (keyInputSuccessful != true)
     {
         userInputKey = grabUserInputKey();
@@ -108,12 +107,12 @@ int main()
          cout << "Message: " << plaintext << endl;
      }
        
-    //outputs encrypted plaintext
+    //Outputs the encrypted plaintext to the user with proper spacing
     cout << endl << endl << "Ciphertext is: " << monoSubEncrypt(plaintext, userInputKey, userSpacing)<<endl;
     
 }
 
-//Puts string in all uppercase
+//Converts all characters of a string to upperCase
 string toUpperCase(string inputString)
 {
     for (char& c : inputString)
@@ -135,7 +134,7 @@ std::string generateRandomKey()
     return randomKey;
 }
 
-//asks for a key from the user
+//Asks the user for a key and stores the input
 string grabUserInputKey()
 {
     cout << endl << endl << "Enter a key to be used for ecryption. Include each letter of the alphabet, none repeated: " << endl;
@@ -144,7 +143,7 @@ string grabUserInputKey()
     return inputKey;
 }
 
-//Determines if the user input key is valid, meaning all 26 letters, none repeating, only letters
+//Determines if the user input key is valid (26 character length, unique characters, english ascii characters)
 bool validateUserKeyInput(string key)
 {
     //checks key length for 26
@@ -163,7 +162,7 @@ bool validateUserKeyInput(string key)
         {
             cout << "Character: " << c << endl;
         }
-            
+         
         if (c > 64 && c < 91) 
         {
             continue;
@@ -175,7 +174,7 @@ bool validateUserKeyInput(string key)
         }
     }
 
-    //Does an iterative search to check that all characters are unique
+    //Does a linear search of the string to confirm that all characters are unique
     char character;
     for (unsigned index{ 0 }; index < key.length() - 1; index++) 
     {
@@ -193,7 +192,8 @@ bool validateUserKeyInput(string key)
     return true;
 }
 
-//prompts the user for amount of letters before a space is added in the encryption
+//Prompts the user for the amount of spacing in the encryption
+//The user can also use the default spacing of 5 characters or use a negative number for the original spacing
 int grabUserSpacing()
 {
     int spacing = 5;
@@ -217,7 +217,8 @@ int grabUserSpacing()
     return spacing;
 }
 
-//determines if a character is plaintext
+//Checks if the character is a valid english ascii character (not case dependant)
+//Outputs a boolean value (true if the character is valid)
 bool isValidChar(char c) 
 {
     if ((c > 96 && c < 123) || (c > 64 && c < 91)) 
@@ -228,7 +229,8 @@ bool isValidChar(char c)
     return false;
 }
 
-//determines if a string is valid plaintext using isValidChar
+//Removes any non-english ascii characters and spacing out of the plaintext
+//Allows for user controlled spacing and removes non-encryptable characters
 void validatePlaintext(string& plaintext, int spacing) 
 {
     for (unsigned index = 0; index < plaintext.length(); index++) 
@@ -237,6 +239,7 @@ void validatePlaintext(string& plaintext, int spacing)
         {
                continue;
         }
+        //Spacing is skiped if the user entered a negitive number when selecting spacing
         else if (plaintext.at(index) == ' ' && spacing <= -1) 
         {
                 continue;
@@ -249,7 +252,7 @@ void validatePlaintext(string& plaintext, int spacing)
     }
 }
 
-//encrypts the valid plaintext using spacing and key
+//Encrypts the plaintext using the encryption key, then the plaintext is spaced if the user specified a positive spacing value
 string monoSubEncrypt(string message, string key, int spacing) 
 {
 
@@ -259,9 +262,11 @@ string monoSubEncrypt(string message, string key, int spacing)
     int spacingIndex = 0;
     int encryptedLength = message.length() + (message.length() / spacing);
 
+    //Checks if character is uppercase/lowercase and then matches the character to the encrypted character in the key
+    //Adds the character to the encrypted string along with spacing
     for (unsigned index{ 0 }; index < message.length(); index++) 
     {
-        //Checks if character is valid and uppercase/lowercase, otherwise skip encryption
+        
         c = message.at(index);
 
         if (spacing <= -1 && c == ' ') 
@@ -284,12 +289,14 @@ string monoSubEncrypt(string message, string key, int spacing)
             cout << "c: "<< message.at(index) << " = "<< static_cast<int>(c) << endl;
         }
 
+        //Adds spacing to the encrypted plaintext defined by the user to increase encryption security
         if ((spacingIndex % spacing == 0 && index != 0) && spacing >= 1) 
         {
             encryptedMessage += ' ';
             spacingIndex = 0;
         }
 
+        //Matches the character in the plaintext to its position in the key (character A, pos 0) and adds the encrypted character to the string
         encryptedMessage += key.at(static_cast<int>(c));
         spacingIndex++;
 
